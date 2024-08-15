@@ -100,6 +100,16 @@ public:
 
 	void Use() { glUseProgram(this->Program);  };
 
+	void setInt(const char* uniformName, int value) {
+		glUseProgram(Program);
+		GLint location = glGetUniformLocation(Program, uniformName);
+		if (location != -1) {
+			glUniform1i(location, value);
+		}
+		else {
+			std::cerr << "Warning: Uniform '" << uniformName << "' not found in shader program." << std::endl;
+		}
+	}
 
 
 };

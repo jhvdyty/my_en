@@ -21,9 +21,15 @@
     <ClCompile Include="..\opengl\glad.c">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
+    <ClCompile Include="test.cpp">
+      <Filter>Файлы ресурсов</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader.h">
+      <Filter>Файлы ресурсов</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
       <Filter>Файлы ресурсов</Filter>
     </ClInclude>
   </ItemGroup>
