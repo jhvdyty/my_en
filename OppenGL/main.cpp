@@ -9,10 +9,20 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
+GLfloat mixValue = 0.2f;
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
+}
+
+void processInput(GLFWwindow* window)
+{
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        mixValue += 0.01f;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        mixValue -= 0.01f;
 }
 
 unsigned int loadTexture(const char* path)
@@ -72,15 +82,15 @@ int main() {
     Shader ourShader("C:/Users/Admin/source/repos/OppenGL/OppenGL/vertex.glsl", "C:/Users/Admin/source/repos/OppenGL/OppenGL/fragment.glsl");
 
     unsigned int texture1 = loadTexture("C:/Users/Admin/source/repos/OppenGL/opengl/texture/brickwall.jpg");
-    unsigned int Texture2 = loadTexture("C:/Users/Admin/source/repos/OppenGL/opengl/texture/brickwall_normal.jpg");
+    unsigned int texture2 = loadTexture("C:/Users/Admin/source/repos/OppenGL/opengl/texture/brickwall_normal.jpg");
 
 
     GLfloat vertices[] = {
         // Positions          // Colors           // Texture Coords
-         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // Top Right
-         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // Bottom Right
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // Bottom Left
-        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // Top Left 
+         1.0f,  1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   2.0f, 2.0f, // Top Righ // Top Right
+         1.0f, -1.0f, 0.0f,   0.0f, 1.0f, 0.0f,   2.0f, 0.0f, // Bottom Right
+        -1.0f, -1.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // Bottom Left
+        -1.0f,  1.0f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 2.0f  // Top Left 
     };
 
     GLuint indices[] = {
@@ -136,8 +146,12 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, texture1);
         glUniform1i(glGetUniformLocation(ourShader.Program, "ourTexture1"), 0);
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture1);
+        glBindTexture(GL_TEXTURE_2D, texture2);
         glUniform1i(glGetUniformLocation(ourShader.Program, "ourTexture2"), 1);
+
+        glUniform1f(glGetUniformLocation(ourShader.Program, "mixValue"), mixValue);
+        
+        processInput(window);
 
         ourShader.Use();
         //glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
