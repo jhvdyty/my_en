@@ -2,6 +2,11 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+
 #include "shader.h"
 #include "stb_image.h"
 
@@ -55,6 +60,10 @@ unsigned int loadTexture(const char* path)
 
 
 int main() {
+
+    glm::mat4 trans(1.0f);
+    //trans = glm::translate(trans, glm::vec3(0.5, 0.5, 0.0));
+
     glfwInit();
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -81,16 +90,18 @@ int main() {
 
     Shader ourShader("C:/Users/Admin/source/repos/OppenGL/OppenGL/vertex.glsl", "C:/Users/Admin/source/repos/OppenGL/OppenGL/fragment.glsl");
 
+
+
     unsigned int texture1 = loadTexture("C:/Users/Admin/source/repos/OppenGL/opengl/texture/brickwall.jpg");
     unsigned int texture2 = loadTexture("C:/Users/Admin/source/repos/OppenGL/opengl/texture/brickwall_normal.jpg");
 
 
     GLfloat vertices[] = {
         // Positions          // Colors           // Texture Coords
-         1.0f,  1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   2.0f, 2.0f, // Top Righ // Top Right
-         1.0f, -1.0f, 0.0f,   0.0f, 1.0f, 0.0f,   2.0f, 0.0f, // Bottom Right
-        -1.0f, -1.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // Bottom Left
-        -1.0f,  1.0f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 2.0f  // Top Left 
+         2.0f,  2.0f, 0.0f,   2.0f, 0.0f, 0.0f,   2.0f, 2.0f, // Top Righ // Top Right
+         2.0f, -2.0f, 0.0f,   0.0f, 2.0f, 0.0f,   2.0f, 0.0f, // Bottom Right
+        -2.0f, -2.0f, 0.0f,   0.0f, 0.0f, 2.0f,   0.0f, 0.0f, // Bottom Left
+        -2.0f,  2.0f, 0.0f,   2.0f, 2.0f, 0.0f,   0.0f, 2.0f  // Top Left 
     };
 
     GLuint indices[] = {
@@ -132,6 +143,7 @@ int main() {
     glBindVertexArray(0);
 
 
+
     while (!glfwWindowShouldClose(window)) {
         // ... Обработка событий (если необходимо) ...
 
@@ -150,6 +162,11 @@ int main() {
         glUniform1i(glGetUniformLocation(ourShader.Program, "ourTexture2"), 1);
 
         glUniform1f(glGetUniformLocation(ourShader.Program, "mixValue"), mixValue);
+
+        trans = glm::rotate(trans, (GLfloat)glfwGetTime() * 50.0f, glm::vec3(0.0, 0.0, 1.0));
+
+        GLuint transformLoc = glGetUniformLocation(ourShader.Program, "transform");
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
         
         processInput(window);
 
