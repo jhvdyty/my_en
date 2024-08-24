@@ -96,12 +96,61 @@ int main() {
     unsigned int texture2 = loadTexture("C:/Users/Admin/source/repos/OppenGL/opengl/texture/brickwall_normal.jpg");
 
 
-    GLfloat vertices[] = {
-        // Positions          // Colors           // Texture Coords
-         2.0f,  2.0f, 0.0f,   2.0f, 0.0f, 0.0f,   2.0f, 2.0f, // Top Righ // Top Right
-         2.0f, -2.0f, 0.0f,   0.0f, 2.0f, 0.0f,   2.0f, 0.0f, // Bottom Right
-        -2.0f, -2.0f, 0.0f,   0.0f, 0.0f, 2.0f,   0.0f, 0.0f, // Bottom Left
-        -2.0f,  2.0f, 0.0f,   2.0f, 2.0f, 0.0f,   0.0f, 2.0f  // Top Left 
+    float vertices[] = {
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    };
+
+    glm::vec3 cubePositions[] = {
+        glm::vec3(0.0f,  0.0f,  0.0f),
+        glm::vec3(2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3(2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3(1.3f, -2.0f, -2.5f),
+        glm::vec3(1.5f,  2.0f, -2.5f),
+        glm::vec3(1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
     };
 
     GLuint indices[] = {
@@ -125,13 +174,10 @@ int main() {
 
 
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
-
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(2);
 
 
@@ -142,13 +188,13 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-
+    glEnable(GL_DEPTH_TEST);
 
     while (!glfwWindowShouldClose(window)) {
         // ... Обработка событий (если необходимо) ...
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // ... Команды отрисовки ...
 
         //GLfloat timeValue = glfwGetTime();
@@ -163,17 +209,47 @@ int main() {
 
         glUniform1f(glGetUniformLocation(ourShader.Program, "mixValue"), mixValue);
 
-        trans = glm::rotate(trans, (GLfloat)glfwGetTime() * 50.0f, glm::vec3(0.0, 0.0, 1.0));
 
+        trans = 1.0f;
+        trans = glm::translate(trans, glm::vec3(0.0f, 0.0f, 1.0f));
+        trans = glm::rotate(trans, (GLfloat)glfwGetTime() * 1.0f, glm::vec3(0.0, 0.0, 1.0));
+        
         GLuint transformLoc = glGetUniformLocation(ourShader.Program, "transform");
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
         
         processInput(window);
 
         ourShader.Use();
+
+        glm::mat4 view(1.0f);
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+        glm::mat4 projection = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
+
+        GLuint modelLoc = glGetUniformLocation(ourShader.Program, "model");
+        GLuint viewLoc = glGetUniformLocation(ourShader.Program, "view");
+        GLuint projLoc = glGetUniformLocation(ourShader.Program, "projection");
+
+        glUniformMatrix4fv(viewLoc, 1, GLFW_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(projLoc, 1, GLFW_FALSE, glm::value_ptr(projection));
+
+
         //glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        
+            
+        for (GLuint i = 0; i < 10; ++i) {
+            glm::mat4 model(1.0f);
+            model = glm::translate(model, cubePositions[i]);
+            GLfloat angle = 20.0f * i;
+            model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+
+            glUniformMatrix4fv(modelLoc, 1, GLFW_FALSE, glm::value_ptr(model));
+
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         //glDrawArrays(GL_TRIANGLES, 6, 0);
         //vertexColorLocation = glGetUniformLocation(secondShaderProgram, "ourColor");
         //glUniform4f(vertexColorLocation, 0.5f, greenValue, 0.7f, 1.0f);
