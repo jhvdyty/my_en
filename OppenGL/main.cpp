@@ -7,8 +7,18 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
+#include "Camera.h"
 #include "shader.h"
 #include "stb_image.h"
+
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
+float lastX = 800.0f / 2.0, lastY = 600.0 / 2.0;
+bool firstMouse = true;
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -24,10 +34,38 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void processInput(GLFWwindow* window)
 {
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
         mixValue += 0.01f;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
         mixValue -= 0.01f;
+}
+
+void moveInput(GLFWwindow* window) {
+    float camerSpeed = 5.0f * deltaTime;
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.ProcessKeyboard(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.ProcessKeyboard(RIGHT, deltaTime);
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+    if (firstMouse) {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos;
+
+    lastX = xpos;
+    lastY = ypos;
+
+    camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 unsigned int loadTexture(const char* path)
@@ -62,6 +100,7 @@ unsigned int loadTexture(const char* path)
 int main() {
 
     glm::mat4 trans(1.0f);
+
     //trans = glm::translate(trans, glm::vec3(0.5, 0.5, 0.0));
 
     glfwInit();
@@ -86,6 +125,9 @@ int main() {
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetKeyCallback(window, key_callback);
+
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
     Shader ourShader("C:/Users/Admin/source/repos/OppenGL/OppenGL/vertex.glsl", "C:/Users/Admin/source/repos/OppenGL/OppenGL/fragment.glsl");
@@ -190,10 +232,20 @@ int main() {
 
     glEnable(GL_DEPTH_TEST);
 
+
+
     while (!glfwWindowShouldClose(window)) {
         // ... Обработка событий (если необходимо) ...
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        processInput(window);
+
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        moveInput(window);
+
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // ... Команды отрисовки ...
 
@@ -217,14 +269,14 @@ int main() {
         GLuint transformLoc = glGetUniformLocation(ourShader.Program, "transform");
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
         
-        processInput(window);
+        
+
 
         ourShader.Use();
 
-        glm::mat4 view(1.0f);
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        glm::mat4 view = camera.GetViewMatrix();
 
-        glm::mat4 projection = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
 
         GLuint modelLoc = glGetUniformLocation(ourShader.Program, "model");
         GLuint viewLoc = glGetUniformLocation(ourShader.Program, "view");
