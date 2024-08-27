@@ -6,6 +6,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 #include "Camera.h"
 #include "shader.h"
@@ -109,6 +112,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     //glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
 
     GLFWwindow* window = glfwCreateWindow(800, 600, "Hello Window!", NULL, NULL);
     if (window == NULL) {
@@ -231,6 +235,20 @@ int main() {
     glBindVertexArray(0);
 
     glEnable(GL_DEPTH_TEST);
+
+
+
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile("my_model.fbx", aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+    
+    if (!scene) {
+        std::cerr << "Failed to load model: " << importer.GetErrorString() << std::endl;
+        return -1;
+    }
+    
+    std::cout << "Number of meshes: " << scene->mNumMeshes << std::endl;
+
+
 
 
 
