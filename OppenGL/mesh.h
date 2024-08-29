@@ -13,15 +13,18 @@
 
 using namespace std;
 
-struct Vertex{
+struct Vertex {
 	glm::vec3 Position;
 	glm::vec3 Normal;
 	glm::vec2 TexCoords;
+	glm::vec3 Tangent;
+	glm::vec3 Bitangent;
 };
 
-struct Texture{
+struct Texture {
 	unsigned int id;
-	string type;
+	std::string type;
+	std::string path;
 };
 
 class Mesh {
@@ -65,7 +68,7 @@ public:
 		glActiveTexture(GL_TEXTURE0);
 
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
 private:

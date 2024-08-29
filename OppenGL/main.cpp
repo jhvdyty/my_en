@@ -12,6 +12,8 @@
 
 #include "Camera.h"
 #include "shader.h"
+#include "mesh.h"
+#include "model.h"
 #include "stb_image.h"
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -136,11 +138,12 @@ int main() {
 
     Shader ourShader("C:/Users/Admin/source/repos/OppenGL/OppenGL/vertex.glsl", "C:/Users/Admin/source/repos/OppenGL/OppenGL/fragment.glsl");
 
-
+    
 
     unsigned int texture1 = loadTexture("C:/Users/Admin/source/repos/OppenGL/opengl/texture/brickwall.jpg");
     unsigned int texture2 = loadTexture("C:/Users/Admin/source/repos/OppenGL/opengl/texture/brickwall_normal.jpg");
 
+    Model ourModel("C:/Users/Admin/Downloads/enmi_2.obj");
 
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -217,9 +220,6 @@ int main() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-
-
-
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
 
@@ -235,22 +235,7 @@ int main() {
     glBindVertexArray(0);
 
     glEnable(GL_DEPTH_TEST);
-
-
-
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile("my_model.fbx", aiProcess_Triangulate | aiProcess_CalcTangentSpace);
     
-    if (!scene) {
-        std::cerr << "Failed to load model: " << importer.GetErrorString() << std::endl;
-        return -1;
-    }
-    
-    std::cout << "Number of meshes: " << scene->mNumMeshes << std::endl;
-
-
-
-
 
     while (!glfwWindowShouldClose(window)) {
         // ... Обработка событий (если необходимо) ...
@@ -262,6 +247,8 @@ int main() {
         lastFrame = currentFrame;
 
         moveInput(window);
+
+        ourShader.Use();
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -318,6 +305,8 @@ int main() {
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
+
+        ourModel.Draw(ourShader);
 
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         //glDrawArrays(GL_TRIANGLES, 6, 0);
