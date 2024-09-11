@@ -100,16 +100,25 @@ public:
 
 	void Use() { glUseProgram(this->Program);  };
 
-	void setInt(const char* uniformName, int value) {
-		glUseProgram(Program);
-		GLint location = glGetUniformLocation(Program, uniformName);
-		if (location != -1) {
-			glUniform1i(location, value);
-		}
-		else {
-			std::cerr << "Warning: Uniform '" << uniformName << "' not found in shader program." << std::endl;
-		}
-	}
+void setInt(const char* uniformName, int value) {
+    glUseProgram(Program);
+    GLint location = glGetUniformLocation(Program, uniformName);
+    if (location != -1) {
+        glUniform1i(location, value);
+    } else {
+        GLint numUniforms;
+        glGetProgramiv(Program, GL_ACTIVE_UNIFORMS, &numUniforms);
+        std::cerr << "Warning: Uniform '" << uniformName << "' not found in shader program." << std::endl;
+        std::cerr << "Active uniforms in program:" << std::endl;
+        for(int i = 0; i < numUniforms; i++) {
+            char name[128];
+            GLint size;
+            GLenum type;
+            glGetActiveUniform(Program, i, sizeof(name), NULL, &size, &type, name);
+            std::cerr << "  " << name << std::endl;
+        }
+    }
+}
 
 
 };

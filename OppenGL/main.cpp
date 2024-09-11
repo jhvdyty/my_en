@@ -10,6 +10,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <ode/ode.h>
+
 #include <limits>
 
 #include "Camera.h"
@@ -40,9 +42,33 @@ void moveInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 unsigned int loadTexture(const char* path);
 
+void simpleSimulation() {
+    dInitODE2(0);
+    dWorldID world = dWorldCreate();
+    dWorldSetGravity(world, 0, -9.81, 0);
+
+    dBodyID body = dBodyCreate(world);
+    dMass mass;  
+    dMassSetBox(&mass, 1, 1, 1, 1);
+    dBodySetMass(body, &mass);
+    dBodySetPosition(body, 0, 10, 0);
+
+    for (int i = 0; i < 100; i++) {
+        dWorldStep(world, 0.05);
+        const dReal* pos = dBodyGetPosition(body);
+        std::cout << "Time: " << i * 0.05 << ", Height: " << pos[1] << std::endl;
+    }
+
+    dBodyDestroy(body);
+    dWorldDestroy(world);
+    dCloseODE();
+}
+
 
 
 int main() {
+
+    simpleSimulation();
 
     glm::mat4 trans(1.0f);
 

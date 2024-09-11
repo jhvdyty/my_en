@@ -60,7 +60,7 @@ public:
 				ss << specularNr++;
 			number = ss.str();
 
-			shader.setInt(("material." + name + number).c_str(), i);
+			shader.setInt((name + number).c_str(), i);
 			glBindTexture(GL_TEXTURE_2D, textures[i].id);
 
 		}
